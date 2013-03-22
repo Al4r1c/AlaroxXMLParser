@@ -7,9 +7,12 @@ Very simple XML parser.
 Parser
 ===============
 
-Parse a XML string and get its associative array
+Parse a XML string and get its associative array:
+
     $xmlParser = new XMLParser();
+
     $xmlParser->setAndParseContent('<root><elem>value</elem><nextelem><child>myChild</child><child attr="this">mySecondChild</child></nextelem></root>');
+
     var_dump($xmlParser->getParsedDataAsAssocArray());
 
 	array(2) {
