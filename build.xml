@@ -1,0 +1,87 @@
+<?xml version="1.0"?>
+
+<project name="AlaroxXMLParser" default="build" basedir=".">
+	<property name="sources" value="${project.basedir}/sources"/>
+	<property name="buildRepertory" value="${project.basedir}/build"/>
+	<property name="logRepertory" value="${buildRepertory}/logs"/>
+	<property name="sourceRepertory" value="${sources}/src"/>
+	<property name="testsRepository" value="${sources}/tests"/>
+
+	<target name="clean" description="Nettoie">
+		<delete dir="${buildRepertory}/logs"/>
+		<delete dir="${buildRepertory}/phpcs"/>
+		<delete dir="${buildRepertory}/code-browser"/>
+		<delete dir="${buildRepertory}/coverage"/>
+		<delete dir="${buildRepertory}/pdepend"/>
+		<delete dir="${buildRepertory}"/>
+	</target>
+
+	<target name="prepare" description="Prepare">
+		<mkdir dir="${buildRepertory}"/>
+		<mkdir dir="${buildRepertory}/logs"/>
+		<mkdir dir="${buildRepertory}/phpcs"/>
+		<mkdir dir="${buildRepertory}/code-browser"/>
+		<mkdir dir="${buildRepertory}/coverage"/>
+		<mkdir dir="${buildRepertory}/pdepend"/>
+	</target>
+
+	<target name="outils_qualites" description="Lance les outils d'analyse">
+		<phingcall target="pdepend"/>
+		<phingcall target="phpmd"/>
+		<phingcall target="phpcpd"/>
+		<phingcall target="phploc"/>
+		<phingcall target="phpcs"/>
+		<phingcall target="phpunit"/>
+		<phingcall target="phpcb"/>
+	</target>
+
+	<target name="pdepend">
+		<phpdepend file="${sourceRepertory}">
+			<logger type="jdepend-xml" outfile="${logRepertory}/jdepend.xml"/>
+			<logger type="jdepend-chart" outfile="${buildRepertory}/pdepend/dependencies.svg"/>
+			<logger type="overview-pyramid" outfile="${buildRepertory}/pdepend/overview-pyramid.svg"/>
+		</phpdepend>
+	</target>
+
+	<target name="phpmd">
+		<phpmd file="${sourceRepertory}">
+			<formatter type="xml" outfile="${buildRepertory}/phpmd.xml"/>
+		</phpmd>
+	</target>
+
+	<target name="phpcpd">
+		<phpcpd file="${sourceRepertory}">
+			<formatter type="pmd" outfile="${logRepertory}/pmd-cpd.xml"/>
+		</phpcpd>
+	</target>
+
+	<target name="phploc">
+		<phploc reportType="csv" reportDirectory="${logRepertory}">
+			<fileset dir="${sourceRepertory}">
+				<include name="**/*.php"/>
+			</fileset>
+		</phploc>
+	</target>
+
+	<target name="phpcs">
+		<phpcodesniffer standard="Zend">
+			<fileset dir="${sourceRepertory}">
+				<include name="**/*.php"/>
+			</fileset>
+			<formatter type="checkstyle" outfile="${logRepertory}/checkstyle.xml"/>
+		</phpcodesniffer>
+	</target>
+
+	<target name="phpunit" description="Lance les tests">
+		<exec logoutput="true" dir="${testsRepository}" command="phpunit" escape="false"/>
+	</target>
+
+	<target name="phpcb">
+		<exec dir="${sourceRepertory}" executable="phpcb">
+			<arg line="--source '${sourceRepertory}' --output '${buildRepertory}/code-browser' --log '${logRepertory}'"/>
+		</exec>
+	</target>
+
+	<target name="build" depends="clean, prepare, outils_qualites"
+	        description="Tâche principale d'intégration continue"/>
+</project>
