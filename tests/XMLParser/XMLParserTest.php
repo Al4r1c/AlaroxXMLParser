@@ -97,12 +97,12 @@ class XMLParserTest extends PHPUnit_Framework_TestCase
         $this->_xmlParser->setAndParseContent("<root><elem>tttt</elem><elem2><elem3>Yuleh</elem3></elem2></root>");
 
         $this->assertEquals(
-            array('root' => array('attr' => array(),
+            array('root' => array('attributes' => array(),
                 'children' => array(
-                    array('elem' => array('attr' => array(), 'value' => 'tttt')),
-                    array('elem2' => array('attr' => array(),
+                    array('elem' => array('attributes' => array(), 'value' => 'tttt')),
+                    array('elem2' => array('attributes' => array(),
                         'children' => array(
-                            array('elem3' => array('attr' => array(), 'value' => 'Yuleh')),
+                            array('elem3' => array('attributes' => array(), 'value' => 'Yuleh')),
                         ))),
                 ))),
             $this->_xmlParser->getParsedDataAsAssocArray()

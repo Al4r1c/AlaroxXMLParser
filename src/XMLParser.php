@@ -50,7 +50,7 @@ class XMLParser
     {
         $result = array();
 
-        $result[$xmlElement->getName()]['attr'] = $xmlElement->getAttributes();
+        $result[$xmlElement->getName()]['attributes'] = $xmlElement->getAttributes();
         if ($xmlElement->hasChildren()) {
             foreach ($xmlElement->getChildren() as $unElementFils) {
                 $result[$xmlElement->getName()]['children'][] = $this->dataToArray($unElementFils);
