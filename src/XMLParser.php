@@ -155,8 +155,8 @@ class XMLParser
     private function tagDebutXML($parser, $nom, $attributs)
     {
         $this->_parsedData[] = array(
-            'element' => strtolower($nom),
-            'attr' => array_map('strtolower', $attributs),
+            'element' => $nom,
+            'attr' => $attributs,
             'children' => array()
         );
     }
