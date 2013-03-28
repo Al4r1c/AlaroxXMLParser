@@ -55,11 +55,19 @@ class XMLElement
      */
     public function getChildren()
     {
-        if ($this->_children === false) {
+        if (!$this->hasChildren()) {
             return array();
         }
 
         return $this->_children;
+    }
+
+    /**
+     * @return bool
+     */
+    public function hasChildren()
+    {
+        return $this->_children !== false;
     }
 
     /**

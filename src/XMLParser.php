@@ -39,25 +39,24 @@ class XMLParser
      */
     public function getParsedDataAsAssocArray()
     {
-        return $this->childrenToArray($this->_parsedData->getChildren());
+        return $this->dataToArray($this->_parsedData);
     }
 
     /**
-     * @param $children XMLElement[]
+     * @param XMLElement $xmlElement
      * @return array
      */
-    private function childrenToArray($children)
+    private function dataToArray($xmlElement)
     {
         $result = array();
 
-        foreach ($children as $unElementFils) {
-            $fils = $unElementFils->getChildren();
-
-            if (!empty($fils)) {
-                $result[$unElementFils->getName()] = $this->childrenToArray($unElementFils->getChildren());
-            } else {
-                $result[$unElementFils->getName()] = $unElementFils->getValue();
+        $result[$xmlElement->getName()]['attr'] = $xmlElement->getAttributes();
+        if ($xmlElement->hasChildren()) {
+            foreach ($xmlElement->getChildren() as $unElementFils) {
+                $result[$xmlElement->getName()]['children'][] = $this->dataToArray($unElementFils);
             }
+        } else {
+            $result[$xmlElement->getName()]['value'] = $xmlElement->getValue();
         }
 
         return $result;
@@ -155,11 +154,11 @@ class XMLParser
      */
     private function tagDebutXML($parser, $nom, $attributs)
     {
-        $GLOBALS['temporaire'][] = $nom;
-
-        $this->_parsedData[$nom]['element'] = strtolower($nom);
-        $this->_parsedData[$nom]['attr'] = array_map('strtolower', $attributs);
-        $this->_parsedData[$nom]['children'] = array();
+        $this->_parsedData[] = array(
+            'element' => strtolower($nom),
+            'attr' => array_map('strtolower', $attributs),
+            'children' => array()
+        );
     }
 
     /**
@@ -168,24 +167,19 @@ class XMLParser
      */
     private function tagFinXML($parser, $nom)
     {
-        global $temporaire;
+        end($this->_parsedData);
 
-        if (end($temporaire) == $nom) {
-            $tempName = $nom;
+        $nouvelElement = new XMLElement();
+        $nouvelElement->setDonnees($this->_parsedData[$last = key($this->_parsedData)]);
 
-            array_pop($temporaire);
+        if (count($this->_parsedData) > 1) {
+            prev($this->_parsedData);
+            $nouveauLast = key($this->_parsedData);
 
-            $nouveauLast = end($temporaire);
-
-            $nouvelElement = new XMLElement();
-            $nouvelElement->setDonnees($this->_parsedData[$tempName]);
-
-            if (count($temporaire) > 0) {
-                $this->_parsedData[$nouveauLast]['children'][] = $nouvelElement;
-                unset($this->_parsedData[$tempName]);
-            } else {
-                $this->_parsedData = $nouvelElement;
-            }
+            $this->_parsedData[$nouveauLast]['children'][] = $nouvelElement;
+            unset($this->_parsedData[$last]);
+        } else {
+            $this->_parsedData = $nouvelElement;
         }
     }
 

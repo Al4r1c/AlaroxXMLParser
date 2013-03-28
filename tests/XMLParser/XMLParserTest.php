@@ -68,6 +68,15 @@ class XMLParserTest extends PHPUnit_Framework_TestCase
         $this->assertEquals('ok', $this->_xmlParser->getValue('elem[attr=y]')[0]->getValue());
     }
 
+    public function testParseMemeTag()
+    {
+        $this->_xmlParser->setAndParseContent(
+            "<root><element><element><element>value</element></element></element><element>value2</element></root>"
+        );
+
+        $this->assertTrue($this->_xmlParser->isValidXML());
+    }
+
     public function testGetValeurSupportAccent()
     {
         $this->_xmlParser->setAndParseContent("<root><elem>AccentuéHey</elem></root>");
@@ -88,7 +97,14 @@ class XMLParserTest extends PHPUnit_Framework_TestCase
         $this->_xmlParser->setAndParseContent("<root><elem>tttt</elem><elem2><elem3>Yuleh</elem3></elem2></root>");
 
         $this->assertEquals(
-            array('elem' => 'tttt', 'elem2' => array('elem3' => 'Yuleh')),
+            array('root' => array('attr' => array(),
+                'children' => array(
+                    array('elem' => array('attr' => array(), 'value' => 'tttt')),
+                    array('elem2' => array('attr' => array(),
+                        'children' => array(
+                            array('elem3' => array('attr' => array(), 'value' => 'Yuleh')),
+                        ))),
+                ))),
             $this->_xmlParser->getParsedDataAsAssocArray()
         );
     }

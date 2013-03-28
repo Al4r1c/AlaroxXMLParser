@@ -112,4 +112,20 @@ class XMLElementTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(array(new XMLElement()), $this->_xmlElement->getChildren());
         $this->assertEquals('value', $this->_xmlElement->getValue());
     }
+
+    public function testHasChildren()
+    {
+        $this->_xmlElement->setDonnees(
+            array('element' => 'nom',
+                'attr' => array('attr1' => 'val1'),
+                'children' => false,
+                'data' => 'value')
+        );
+
+        $this->assertFalse($this->_xmlElement->hasChildren());
+
+        $this->_xmlElement->setChildren(array(new XMLElement()));
+
+        $this->assertTrue($this->_xmlElement->hasChildren());
+    }
 }
