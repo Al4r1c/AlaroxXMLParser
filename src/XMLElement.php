@@ -43,8 +43,8 @@ class XMLElement
      */
     public function getUnAttribut($attribut)
     {
-        if (array_key_exists(strtolower($attribut), $this->_attributs)) {
-            return $this->_attributs[strtolower($attribut)];
+        if (array_key_exists($attribut, $this->_attributs)) {
+            return $this->_attributs[$attribut];
         } else {
             return null;
         }

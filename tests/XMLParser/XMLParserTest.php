@@ -60,12 +60,28 @@ class XMLParserTest extends PHPUnit_Framework_TestCase
         $this->assertEquals('valeur', $this->_xmlParser->getValue('elem.deeper.yes')[0]->getValue());
     }
 
+    public function testGetValeurKeyCase()
+    {
+        $this->_xmlParser->setAndParseContent("<root><eLem><dEEper>valeur</dEEper></eLem></root>");
+
+        $this->assertEquals('dEEper', $this->_xmlParser->getValue('eLem.dEEper')[0]->getName());
+        $this->assertEquals('valeur', $this->_xmlParser->getValue('eLem.dEEper')[0]->getValue());
+    }
+
     public function testGetValeurAttribut()
     {
         $this->_xmlParser->setAndParseContent("<root><elem attr=\"y\">ok</elem><elem attr=\"n\">nok</elem></root>");
 
         $this->assertEquals('elem', $this->_xmlParser->getValue('elem[attr=y]')[0]->getName());
         $this->assertEquals('ok', $this->_xmlParser->getValue('elem[attr=y]')[0]->getValue());
+    }
+
+    public function testGetValeurAttributKeyCase()
+    {
+        $this->_xmlParser->setAndParseContent("<root><elem attr=\"AbCdEf\">ok</elem><elem attr=\"n\">nok</elem></root>");
+
+        $this->assertEquals('elem', $this->_xmlParser->getValue('elem[attr=AbCdEf]')[0]->getName());
+        $this->assertEquals('ok', $this->_xmlParser->getValue('elem[attr=AbCdEf]')[0]->getValue());
     }
 
     public function testParseMemeTag()

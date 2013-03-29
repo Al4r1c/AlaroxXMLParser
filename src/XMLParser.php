@@ -84,7 +84,7 @@ class XMLParser
     public function getValue($clefConfig)
     {
         if (false !== $valeur = $this->rechercheValeurTableauMultidim(
-            explode('.', strtolower($clefConfig)), $this->_parsedData->getChildren()
+            explode('.', $clefConfig), $this->_parsedData->getChildren()
         )
         ) {
             return $valeur;
@@ -210,7 +210,7 @@ class XMLParser
         if (count($tabKey) == 1) {
             $tabResult = array();
 
-            if (preg_match_all('#^[a-z]+(\[[a-z]+=[a-z0-9]+\]){1}$#', $tabKey[0])) {
+            if (preg_match_all('#^[a-zA-Z]+(\[[a-zA-Z]+=[a-zA-Z0-9]+\]){1}$#', $tabKey[0])) {
                 $tabClef = explode('[', $tabKey[0]);
                 $clef = $tabClef[0];
                 $filtres = explode('=', $tabClef[1]);
@@ -221,7 +221,7 @@ class XMLParser
 
             foreach ($arrayValues as $unElement) {
                 if ($unElement->getName() === $clef) {
-                    if (isset($filtres) && $unElement->getUnAttribut($filtres[0]) !== strtolower($filtres[1])) {
+                    if (isset($filtres) && $unElement->getUnAttribut($filtres[0]) !== $filtres[1]) {
                         continue;
                     }
 

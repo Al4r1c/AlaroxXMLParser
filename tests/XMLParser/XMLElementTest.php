@@ -76,6 +76,13 @@ class XMLElementTest extends PHPUnit_Framework_TestCase
         $this->assertEquals('val2', $this->_xmlElement->getUnAttribut('param2'));
     }
 
+    public function testGetAttributKeyCase()
+    {
+        $this->_xmlElement->setAttributs(array('param' => 'nok', 'ParaM' => 'valuE'));
+
+        $this->assertEquals('valuE', $this->_xmlElement->getUnAttribut('ParaM'));
+    }
+
     public function testGetAttributNonExistant()
     {
         $this->_xmlElement->setAttributs(array('param1' => 'val1'));
