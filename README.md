@@ -1,4 +1,4 @@
-AlaroxXMLParser v0.2
+AlaroxXMLParser v0.3
 ===============
 
 Very simple XML parser.
